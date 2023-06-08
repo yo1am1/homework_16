@@ -1,7 +1,9 @@
 import json
 import pathlib
 import pytest
+from .views import index, display
 
+from django.core.management import call_command
 import responses
 
 from .exchange_provider import (
@@ -81,3 +83,16 @@ def test_currencyapi_rate(mocked):
     e = CurrencyAPIExchange("currencyapi", "UAH", "USD")
     e.get_rate()
     assert e.pair.sell == 36.912196
+
+
+@pytest.fixture(scope="session")
+def django_db_setup(django_db_setup, django_db_blocker):
+    with django_db_blocker.unblock():
+        call_command("loaddata", "db_init.yaml")
+
+
+# @freeze_time("2022-01-01")
+@pytest.mark.django_db
+def test_index_view():
+    response = index(None)
+    assert response.status_code == 200
