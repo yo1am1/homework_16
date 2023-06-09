@@ -1,7 +1,9 @@
 import json
 import pathlib
 import pytest
-from .views import index, display
+from .views import index, vkurse, currencyapi, nbu, privat, monobank
+
+from freezegun import freeze_time
 
 from django.core.management import call_command
 import responses
@@ -52,6 +54,7 @@ def test_privat_rate(mocked):
     assert e.pair.sell == 37.45318
 
 
+@responses.activate
 def test_vkurse_rate(mocked):
     mocked_response = mocked("vkurse_response.json")
     responses.get(
@@ -60,9 +63,10 @@ def test_vkurse_rate(mocked):
     )
     e = VkurseExchange("vkurse", "USD", "UAH")
     e.get_rate()
-    assert e.pair.sell == 37.1
+    assert e.pair.sell == 37.4
 
 
+@responses.activate
 def test_nbu_rate(mocked):
     mocked_response = mocked("nbu_response.json")
     responses.get(
@@ -74,15 +78,16 @@ def test_nbu_rate(mocked):
     assert e.pair.sell == 36.5686
 
 
+@responses.activate
 def test_currencyapi_rate(mocked):
     mocked_response = mocked("currencyapi_response.json")
     responses.get(
-        "https://currencyapi.net/api/v1/rates?base=USD&key=3c9b2a0c-7a3f-11eb-8b1b-7d4d8a7e0b7f",
+        "https://api.currencyapi.com/v3/latest?apikey=YQeLH52G55DlV361wbi6Vs1cDj3Jg0TG2KTSBIG6&currencies=EUR%2CUSD%2CCAD%2CUAH",
         json=mocked_response,
     )
     e = CurrencyAPIExchange("currencyapi", "UAH", "USD")
     e.get_rate()
-    assert e.pair.sell == 36.912196
+    assert e.pair.sell == 36.943381
 
 
 @pytest.fixture(scope="session")
@@ -91,8 +96,55 @@ def django_db_setup(django_db_setup, django_db_blocker):
         call_command("loaddata", "db_init.yaml")
 
 
-# @freeze_time("2022-01-01")
+@freeze_time("2023-01-01")
 @pytest.mark.django_db
 def test_index_view():
     response = index(None)
+    assert response.status_code == 200
+    assert json.loads(response.content) == {
+        "current_rates": [
+            {
+                "buy": 1.2,
+                "currency_a": "USD",
+                "currency_b": "EUR",
+                "date": "2023-01-01",
+                "id": 1,
+                "sell": 1.1,
+                "vendor": "mono",
+            },
+            {
+                "buy": 1.0,
+                "currency_a": "USD",
+                "currency_b": "EUR",
+                "date": "2023-01-01",
+                "id": 2,
+                "sell": 1.01,
+                "vendor": "privat",
+            },
+        ]
+    }
+
+
+def test_privat_view():
+    response = privat(None)
+    assert response.status_code == 200
+
+
+def test_vkurse_view():
+    response = vkurse(None)
+    assert response.status_code == 200
+
+
+def test_nbu_view():
+    response = nbu(None)
+    assert response.status_code == 200
+
+
+def test_currencyapi_view():
+    response = currencyapi(None)
+    assert response.status_code == 200
+
+
+def test_monobank_view():
+    response = monobank(None)
     assert response.status_code == 200

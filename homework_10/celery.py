@@ -6,7 +6,7 @@ from celery.schedules import crontab
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exchange_rates.settings")
 
-app = Celery("exchange_rates")
+app = Celery("homework_10")
 every_3_am = crontab(minute=0, hour=3)
 
 # Using a string here means the worker doesn't have to serialize

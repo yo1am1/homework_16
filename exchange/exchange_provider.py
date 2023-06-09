@@ -94,7 +94,7 @@ class NBUExchange(ExchangeBase):
 class CurrencyAPIExchange(ExchangeBase):
     def get_rate(self):
         r = requests.get(
-            f"https://api.currencyapi.com/v3/latest?apikey=YQeLH52G55DlV361wbi6Vs1cDj3Jg0TG2KTSBIG6"
+            f"https://api.currencyapi.com/v3/latest?apikey=YQeLH52G55DlV361wbi6Vs1cDj3Jg0TG2KTSBIG6&currencies=EUR%2CUSD%2CCAD%2CUAH"
         )
         r.raise_for_status()
         r = r.json()

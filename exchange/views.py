@@ -20,7 +20,9 @@ class DecimalAsFloatJSONEncoder(DjangoJSONEncoder):
 
 def index(request):
     current_rates = list(
-        Rate.objects.values("vendor", "currency_a", "currency_b").order_by("vendor")
+        Rate.objects.values(
+            "id", "date", "vendor", "currency_a", "currency_b", "sell", "buy"
+        ).order_by("vendor")
     )
     return JsonResponse(
         {"current_rates": current_rates}, encoder=DecimalAsFloatJSONEncoder
