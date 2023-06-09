@@ -108,7 +108,7 @@ def test_index_view():
                 "currency_a": "USD",
                 "currency_b": "UAH",
                 "date": "2023-01-01",
-                "id": 2,
+                "id": 3,
                 "sell": 36.943381,
                 "vendor": "currencyapi",
             },
@@ -120,6 +120,15 @@ def test_index_view():
                 "id": 1,
                 "sell": 1.1,
                 "vendor": "mono",
+            },
+            {
+                "buy": 1.0,
+                "currency_a": "USD",
+                "currency_b": "EUR",
+                "date": "2023-01-01",
+                "id": 2,
+                "sell": 1.01,
+                "vendor": "privat",
             },
         ]
     }
