@@ -149,4 +149,6 @@ def test_currencyapi_view():
 def test_monobank_view():
     response = monobank(None)
     assert response.status_code == 200
+
+
 # endregion
