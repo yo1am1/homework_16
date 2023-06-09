@@ -104,6 +104,15 @@ def test_index_view():
     assert json.loads(response.content) == {
         "current_rates": [
             {
+                "buy": 1.0,
+                "currency_a": "USD",
+                "currency_b": "UAH",
+                "date": "2023-01-01",
+                "id": 3,
+                "sell": 36.943381,
+                "vendor": "currencyapi",
+            },
+            {
                 "buy": 1.2,
                 "currency_a": "USD",
                 "currency_b": "EUR",
