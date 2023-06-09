@@ -17,3 +17,13 @@
     currency_b: EUR
     sell: 1.01
     buy: 1.0
+
+- model: exchange.rate
+  pk: 2
+  fields:
+    date: 2023-01-01
+    vendor: currencyapi
+    currency_a: USD
+    currency_b: UAH
+    sell: 36.943381
+    buy: 1.0
